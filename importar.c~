@@ -98,7 +98,7 @@ void elementoRegPoints (tRegPoints SA_faces,int pos,tTipoPoint *tipo)
       n++;
     }
     if ( p == NULL){
-     //printf("erro Ponto: posição inválida\n");
+     printf("erro Ponto: posição inválida\n");
      parar=1;  //erro: posição inválida
     }else{
         *tipo = p -> ponto;
