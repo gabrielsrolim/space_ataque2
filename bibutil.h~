@@ -98,7 +98,7 @@ public:
 
 // Define a estrutura de uma face
 struct FACE {
-	GLint nv;		// número de vértices na face
+	GLfloat nv;		// número de vértices na face
 	std::vector<GLint> vert;	// índices dos vértices
 	std::vector<GLint> norm;	// índices das normais
 	std::vector<GLint> tex;		// índices das texcoords

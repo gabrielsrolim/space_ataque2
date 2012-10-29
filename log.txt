@@ -1,0 +1,46 @@
+*** Objeto: teste.obj
+aux = "# Blender MTL File: ''" size = 22
+aux = "# Material Count: 1" size = 19
+aux = "newmtl _41608_398602833490698_803199980_n.jpg" size = 45
+aux = "Ns 0" size = 4
+aux = "Ka 0.000000 0.000000 0.000000" size = 29
+aux = "Kd 0.8 0.8 0.8" size = 14
+aux = "Ks 0.8 0.8 0.8" size = 14
+aux = "d 1" size = 3
+aux = "illum 2" size = 7
+aux = "map_Kd /home/gabriel/Imagens/41608_398602833490698_803199980_n.jpg" size = 66
+aux = "" size = 0
+aux = "" size = 0
+Vertices: 4876
+Faces:    0
+Normais:  6063
+Texcoords:4869
+Novo modelo: ShapeIndexedFaceSet.001_ShapeIndexedFaceSet__41608_398602833490698_803199980_n.jpg
+Vertices: 0
+Faces:    9649
+Normais:  0
+Texcoords:0
+Limites: -2.79205 -1.63228 -1.51352 - 0.772446 -0.604518 2.31157
+Nave Importado
+*** Objeto: ovni.obj
+aux = "# Blender MTL File: ''" size = 22
+aux = "# Material Count: 1" size = 19
+aux = "newmtl " size = 7
+aux = "Ns 0" size = 4
+aux = "Ka 0.000000 0.000000 0.000000" size = 29
+aux = "Kd 0.8 0.8 0.8" size = 14
+aux = "Ks 0.8 0.8 0.8" size = 14
+aux = "d 1" size = 3
+aux = "illum 2" size = 7
+aux = "" size = 0
+aux = "" size = 0
+Vertices: 4778
+Faces:    0
+Normais:  0
+Texcoords:0
+Novo modelo: ShapeIndexedFaceSet_ShapeIndexedFaceSet.001_
+Vertices: 0
+Faces:    9646
+Normais:  0
+Texcoords:0
+Limites: 1.91037 -2.27686 -1.39625 - 4.50489 -1.57501 1.15239

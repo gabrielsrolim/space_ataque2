@@ -6,16 +6,20 @@ RM = rm -f
 
 
 $(BIN): $(OBJ)
-	g++ $(LINKOBJ) -o space_ataque $(CXXFLAGS)
+	g++ $(LINKOBJ) -g -o space_ataque $(CXXFLAGS)
+	chmod 777 $(OBJ)
+	
+gdb: $(OBJ)
+	g++ $(LINKOBJ) -g -o space_ataque $(CXXFLAGS)
 
 main.o: main.cpp
-	g++ -c main.cpp -o main.o $(CXXFLAGS)
+	g++ -c main.cpp -g -o main.o $(CXXFLAGS)
 
 bibutil.o: bibutil.cpp
-	g++ -c bibutil.cpp -o bibutil.o $(CXXFLAGS)
+	g++ -c bibutil.cpp -g -o bibutil.o $(CXXFLAGS)
 	
 importar.o: importar.c
-	g++ -c importar.c -o importar.o $(CXXFLAGS)	
+	g++ -c importar.c -g -o importar.o $(CXXFLAGS)	
 	
 clean: 
 	${RM} $(OBJ) $(BIN)	

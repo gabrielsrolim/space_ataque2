@@ -19,19 +19,21 @@ tPosicao missel_esfera,missel_nave,nave_espacial;
 tRegFaces SA_faces;
 tRegPoints points;
 tEsfera esfera[QTD_ESFERAS];
-int width_window=800,height_window=650,num_esfera=0;
-int SA_Time=30,dispara=0,dispara_missel_esfera=0,missel_esfera_habilita=0,missel_selecionado,vidas=3,habilita_desenho=1;
+int width_window=800,height_window=600,num_esfera=0;
+int SA_Time=300,dispara=0,dispara_missel_esfera=0,missel_esfera_habilita=0,missel_selecionado,vidas=3,habilita_desenho=1;
 double rx = 0.0,ry=0.0,rz=0.0,trans_missel_nave=0.0,trans_missel_esfera=0.0,vez=0.0,vira_nave=0;
 double z=0.5,cor_esferas=0.0,mov_esferas=0.0;
 double trans_ini_nave=-15,escala_missel=0.2;//padrão escala 0.2m translação inicial: -19(eixo y)
 double tamanho_vida = 5;
 
-char aviao,missel,ovni;
+OBJ *ovni = NULL,*aviao = NULL;
+char /*aviao,*/missel/*,ovni*/;
 int num=0,pontos=0; 
 int i;
 char textpontos[50],textRodada[50];
+TEX *imagem;
 
-float teste = 0;
+int teste = 0;
 
 
 
@@ -107,24 +109,58 @@ void ResetaNave(){
 
 
 void iluminacao(void){
+    GLfloat luzAmbiente[4] = {1,1,1,1.0};
+    GLfloat luzDifusa[4] = {1,1,1,1.0};//cor
+    GLfloat luzEspecular[4] = {1.0,1.0,1.0,1.0};//brilho
+    GLfloat posicaoLuz[4] = {0.0,0.0,1,0.0};
+    
+    GLfloat especularidade[4] = {1.0,1.0,1.0,1.0};
+    GLint especMaterial = 60;
+    
+    
+    //Define a refletância do material
+    glMaterialfv(GL_FRONT,GL_SPECULAR,especularidade);
+    
+    //Define a concentração do brilho
+    glMateriali(GL_FRONT,GL_SHININESS,especMaterial);
+    
+    //Ativa o uso da luz ambiente
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT,luzAmbiente);
+    
+    //define os parâmetros da luz de número 0
+    glLightfv(GL_LIGHT0,GL_AMBIENT,luzAmbiente);
+    glLightfv(GL_LIGHT0,GL_DIFFUSE,luzDifusa);
+    glLightfv(GL_LIGHT0,GL_SPECULAR,luzEspecular);
+    glLightfv(GL_LIGHT0,GL_POSITION,posicaoLuz);
+    
+    glEnable(GL_COLOR_MATERIAL);
+    
+    glEnable(GL_LIGHTING);
+    
+    glShadeModel(GL_FLAT);
+    
+    
     //GLfloat luzAmbiente[4]={0.2,0.2,0.2,1.0};
-    GLfloat luzAmbiente[4]={1,1,1,1.0}; 
-	GLfloat luzDifusa[4]={1,1,1,1};	   // "cor" 
-	GLfloat luzEspecular[4]={1, 1, 1, 0.4};// "brilho" 
-	GLfloat posicaoLuz[4]={20.0, 0.0, 20, 1};//{20.0, 0.0, 20, 1};
-    GLfloat posicaoLuz2[4]={-20.0, 0.0, 20, 1};
+  /*GLfloat luzAmbiente[4]={0.5,0.5,0.5,1}; 
+	GLfloat luzDifusa[4]={0.5,0.5,0.5,1};	   // "cor" 
+	GLfloat luzEspecular[4]={1, 1, 1, 1};// "brilho" 
+	GLfloat posicaoLuz[4]={20.0, 0.0, 20, 1};;//{20.0, 0.0, 20, 1};
+    GLfloat posicaoLuz2[4]={-20.0, 0.0, 20, 1};;
+    
+    GLfloat posicaoLuz3[4]={20.0, 0.0, 20, 1};//{20.0, 0.0, 20, 1};
+    GLfloat posicaoLuz4[4]={-20.0, 0.0, 20, 1};
 
 	// Capacidade de brilho do material
-	GLfloat especularidade[4]={1.0,1.0,1.0,1.0}; 
-	GLint especMaterial = 60;
+	GLfloat especularidade[4]={0.2,0.2,0.2,0.1}; 
+	GLint especMaterial = 90;
 
  	// Especifica que a cor de fundo da janela sera preta
-	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);*/
 	
 	// Habilita o modelo de colorizacao de Gouraud
-	glShadeModel(GL_SMOOTH);
+	//glShadeModel(GL_FLAT);
 
-	// Define a refletancia do material 
+	/*// Define a refletancia do material 
 	glMaterialfv(GL_FRONT,GL_SPECULAR, especularidade);
 	// Define a concentracao do brilho
 	glMateriali(GL_FRONT,GL_SHININESS,especMaterial);
@@ -136,7 +172,7 @@ void iluminacao(void){
 	glMaterialfv(GL_FRONT,GL_SPECULAR ,luzEspecular);
 
 	// Ativa o uso da luz ambiente 
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
+	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbiente);
 
 	// Define os par�metros da luz de n�mero 0
 	glLightfv(GL_LIGHT0, GL_AMBIENT, luzAmbiente); 
@@ -156,7 +192,7 @@ void iluminacao(void){
 	glEnable(GL_LIGHTING);  
 	// Habilita a luz de numero 0
     glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT1);*/
 
 
      
@@ -165,10 +201,19 @@ void iluminacao(void){
 
 
 void Desenha(){
-     
-     
-   iluminacao();
+   float fps;
+   char msg[40+1];
    
+   
+
+     
+   glPushMatrix();  
+    iluminacao();
+   glPopMatrix();
+   
+   glEnable(GL_CULL_FACE); // habilita remoção de superficies escondidas.
+   glCullFace(GL_BACK);
+      
    glDrawBuffer(GL_BACK);
     
    glMatrixMode(GL_PROJECTION);
@@ -190,10 +235,8 @@ void Desenha(){
    if(habilita_desenho){
    glPushMatrix();
     glTranslated(0, 0, -60);
-   glRotated(-48,1,0,0);
-     //glTranslated(0, 0, teste);
-     Esferas();
-     misseis();
+     //Esferas();
+     //misseis();
      desenha_aviao();
      glPopMatrix();  
    }else{
@@ -203,6 +246,21 @@ void Desenha(){
 	 glPopMatrix(); 
    }
    
+   fps = CalculaQPS();
+  sprintf(msg,"fps: %f\n",fps);
+  printf(msg);
+  Escreve2D(0, 0.005, (unsigned char *)msg);
+   
+  /* glEnable(GL_BLEND); 
+   
+   glBlendFunc(	GL_ONE,GL_ONE_MINUS_SRC_COLOR);
+   
+   glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+    glRasterPos3f(-20,-20,-20);
+    glDrawPixels(imagem->dimx,imagem->dimy,GL_RGB,GL_UNSIGNED_BYTE, imagem->data);
+    
+    glDisable(GL_BLEND); 
+*/
    
 
    glMatrixMode(GL_PROJECTION);
@@ -219,7 +277,7 @@ void Desenha(){
    glDisable(GL_LIGHTING);
    
    barravida();
-   chances();
+   //chances();
    Texto();
    
    glBegin(GL_QUAD_STRIP);
@@ -231,24 +289,46 @@ void Desenha(){
      glVertex3d(20,-20,-10);
      glEnd();
    
-   glEnable(GL_LIGHTING);
-   //glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+   glEnable(GL_DEPTH_TEST);
    glPopMatrix(); 
    
+   glDisable(GL_CULL_FACE);
 }
 
 void desenha_aviao(){
      //Aviao
    glPushMatrix();
-   glColor3d(0, 0.0,0.000001234734 );
-   glTranslated(0, -17.5, 5);
+   glColor3d(0.234, 0.234,0.234 );
+   glTranslated(0, -17.5, 3);
    glTranslated(rx,0, 0);
-   glRotated(180,0,0,1);
-   glRotated(8,1,0,0);
-   glRotated(vira_nave,0,1,0);
-   glScaled(0.5,0.5,0.5);
+   glRotated(90,1,0,0);
+   glRotated(-54,1,0,0);
    
-   glCallList(aviao);
+   glRotated(vira_nave,0,0,1);
+   glScaled(1.5,1.5,1.5);
+   
+   //glCallList(aviao);
+   SetaModoDesenho('s');
+   //printf("Avião\n");
+   //glPushMatrix();
+   //glTranslated(1, 2, 1);
+   DesenhaObjeto(aviao);
+   //glPopMatrix(); 
+    glBegin(GL_LINES);
+      
+          glColor3d(0.5, 0.4, 0.3);//x
+          glVertex3d(-20,0,0);
+          glVertex3d(20,0,0);
+        
+          glColor3d(0, 1, 0);//y
+          glVertex3d(0,-20,0);
+          glVertex3d(0,20,0);
+        
+          glColor3d(0, 0, 1);//Z
+          glVertex3d(0,0,-20);
+          glVertex3d(0,0,20);
+        glEnd();
    glPopMatrix(); 
 
 }
@@ -259,34 +339,37 @@ void chances(){
   if (vidas!=0){
    glPushMatrix();
        glColor3d(0, 0, 1);
-       glTranslated(-15,0, 0);
-       glScaled(0.1,1,1);
-       glRotated(90,0,0,1);
-       glRotated(180,1,0,0);
-       glCallList(aviao);
+       glTranslated(-14,0, 0);
+       glScaled(0.5,7,0.8);//glScaled(0.1,1,1);
+       glRotated(90,1,0,0);
+       glRotated(90,0,1,0);
+       SetaModoDesenho('t');
+       DesenhaObjeto(aviao);
   glPopMatrix();
  } 
  if(vidas>1){
  //Vida 2
    glPushMatrix();
        glColor3d(0, 0, 1);
-       glTranslated(-13.5,0, 0);
-       glScaled(0.1,1,1);
-       glRotated(90,0,0,1);
-       glRotated(180,1,0,0);  
-       glCallList(aviao);
-   glPopMatrix();
+       glTranslated(-16.3,0, 0);
+       glScaled(0.5,7,0.8);//glScaled(0.1,1,1);
+       glRotated(90,1,0,0);
+       glRotated(90,0,1,0);
+       SetaModoDesenho('t');
+       DesenhaObjeto(aviao);
+  glPopMatrix();
  }
  if(vidas==3){
  //Vida 3
    glPushMatrix();
        glColor3d(0, 0, 1);
-       glTranslated(-11.9,0, 0);
-       glScaled(0.1,1,1);
-       glRotated(90,0,0,1);
-       glRotated(180,1,0,0);  
-       glCallList(aviao);
-   glPopMatrix(); 
+       glTranslated(-18.5,0, 0);
+       glScaled(0.5,7,0.8);//glScaled(0.1,1,1);
+       glRotated(90,1,0,0);
+       glRotated(90,0,1,0);
+       SetaModoDesenho('t');
+       DesenhaObjeto(aviao);
+  glPopMatrix();
   }
 }
 
@@ -338,13 +421,12 @@ void keyboard(unsigned char k,int x,int y){
             if(vira_nave<=10){
                 vira_nave=14;            
             }else{
-             if(rx<=-20.0){
-               rx=-20;
-             }else{
-                rx-=VELOCIDADE_DELC_AVIAO;            
-             }
-            }
-            
+                if(rx<=-20.0){
+                    rx=-20;
+                }else{
+                    rx-=VELOCIDADE_DELC_AVIAO;            
+                } 
+            }            
             glutPostRedisplay();
             //vira_nave=0;
         break;
@@ -358,11 +440,12 @@ void keyboard(unsigned char k,int x,int y){
             if(vira_nave>=-10){
                 vira_nave=-14;            
             }else{
-              if(rx>=20.0){
+             if(rx>=20.0){
                 rx=20;
               }else{
                 rx+=VELOCIDADE_DELC_AVIAO;
               }
+             
             }
             //vira_nave=-20; 
             glutPostRedisplay();
@@ -411,12 +494,12 @@ void keyboard(unsigned char k,int x,int y){
                 exit(0);
               break;
         case '+':
-                 teste+=0.1;
-                 printf("teste %f\n",teste);
+                 teste+=1;
+                 printf("teste %d\n",teste);
                  break;
         case '-':
-                 teste-=0.1;
-                 printf("teste %f\n",teste);
+                 teste-=1;
+                 printf("teste %d\n",teste);
                  break;
         default:
             printf("%c\n",k);
@@ -430,20 +513,51 @@ void Esferas(){
      num_esfera=0;
      cor_esferas=0;
    }
+   
+   glPushMatrix();
+    cor_esferas+=0.001;
+    glColor3d(0.5, 0.6, 1);
+    //glTranslated(teste,0,0);
+    //glTranslated(0,mov_esferas,0);
+    glRotated(11,1,0,0);
+    //glRotated(teste,0,1,0);rodar ovne.
+    glScaled(2,2,2);
+    SetaModoDesenho('s');
+    //DesenhaObjeto(ovni);
+    
+     glBegin(GL_LINES);
+      
+          glColor3d(0.5, 0.4, 0.3);//x
+          glVertex3d(-20,0,0);
+          glVertex3d(20,0,0);
+        
+          glColor3d(0, 1, 0);//y
+          glVertex3d(0,-20,0);
+          glVertex3d(0,20,0);
+        
+          glColor3d(0, 0, 1);//Z
+          glVertex3d(0,0,-20);
+          glVertex3d(0,0,20);
+        glEnd();
+	glPopMatrix();  
 
    //Esferas devastadoras linha 1
-   if(QTD_LINHAS >= 1){
+   /*if(QTD_LINHAS >= 1){
 	   for(i=0;i<QTD_LINHA_ESFERA;i++,num_esfera++){
 		 glPushMatrix();
 		 cor_esferas+=0.001;
 		 glColor3d(0, 0, cor_esferas+0.1);
 		 if(esfera[num_esfera].status  == DISPONIVEL){
-			glTranslated(esfera[num_esfera].x,esfera[num_esfera].y,esfera[num_esfera].z);
+			glTranslated((float)((float)esfera[num_esfera].x-3.2),esfera[num_esfera].y+1,esfera[num_esfera].z);
 			glTranslated(0,mov_esferas,0);
-			glRotated(69,1,0,0);
-			glScaled(0.5,0.5,0.5);
+			glRotated(90,1,0,0);
+		    glRotated(-814,1,0,0);
+			glScaled(1,1,1);
 			//glutSolidSphere(1,16,16);
-			glCallList(ovni);
+			SetaModoDesenho('s');
+			//printf("Ovni\n");
+			DesenhaObjeto(ovni);
+			//glCallList(ovni);
 		 }
 		 glPopMatrix();
 	   }
@@ -503,7 +617,7 @@ void Esferas(){
 		 }
 		 glPopMatrix();
 	   }
-	}
+	}*/
  
     
 }
@@ -514,7 +628,7 @@ void misseis(){
     //missel nave center
    glPushMatrix();
    glColor3d(1, 0, 0);
-   glTranslated(0, trans_ini_nave, 0);//retirado: +4(-19)
+   glTranslated(0, trans_ini_nave-3, 0);//retirado: +4(-19)
    glTranslated(rx, 0, 0);
    glTranslated(0, trans_missel_nave, 0);
    glRotated(-90,1,0,0);
@@ -546,16 +660,30 @@ void misseis(){
 
 void Inicializa(){
     char str[40+1];
+    
+    imagem = CarregaJPG("490020730_5d1ef91b20_o.jpg");
    
    //importarBlenderWrl("nave_pronta3.wrl",&SA_faces,&points);
    sprintf(textpontos,"%s","Pontos: 0");
    //printf("Inicializa 1\n");
-   aviao=glGenLists(1);
+   
+   
+   aviao = CarregaObjeto("nave_pronta_gabriel.obj", true);
+    if(aviao == NULL){
+        printf("ERRO teste.obj\n");
+    }else{
+        printf("Nave Importado\n");
+    }
+  
+   //CriaDisplayList(aviao);
+   //CarregaTextura("textura.jpg", false);
+   
+   /*aviao=glGenLists(1);
    glNewList(aviao,GL_COMPILE);
      //printf("Inicializa 2\n");
      strcpy(str,"nave_pronta3.wrl");
      importarBlenderWrl(str,&SA_faces,&points);
-   glEndList();
+   glEndList();*/
 
    DestroiRegFaces(&SA_faces);
    DestroiRegPoints(&points);
@@ -570,13 +698,22 @@ void Inicializa(){
     DestroiRegFaces(&SA_faces);
    DestroiRegPoints(&points);
    
-   ovni=glGenLists(3);
+   
+    ovni = CarregaObjeto("ovni.obj", true);
+    if(ovni == NULL){
+        printf("ERRO ovni.obj\n");
+    }else{
+        printf("Ovni Importado\n");
+    }
+  
+   //CriaDisplayList(ovni);
+   /*ovni=glGenLists(3);
    glNewList(ovni,GL_COMPILE);
     importarBlenderWrl("untitled4.wrl",&SA_faces,&points);
    glEndList();
 
    DestroiRegFaces(&SA_faces);
-   DestroiRegPoints(&points);
+   DestroiRegPoints(&points);*/
 
    //iluminacao();
    InitEsferas(esfera);
@@ -667,11 +804,12 @@ void ColisoesEsferaNave(){
 
 
 void TimerFunction(int value){
+    
     //vira_nave=0;
     if(habilita_desenho){
-        ColisoesMisselNave();
-        ColisoesMisselEsfera();
-        ColisoesEsferaNave();
+        //ColisoesMisselNave();
+       // ColisoesMisselEsfera();
+       // ColisoesEsferaNave();
 
         num= rand() % 100;
         vez+=1.0;
@@ -713,8 +851,10 @@ void TimerFunction(int value){
         
         glutPostRedisplay();
     }
+  glutPostRedisplay();
+  
     
-  glutTimerFunc(SA_Time, TimerFunction, 1); 
+  glutTimerFunc(SA_Time, TimerFunction, 0); 
 
 }
 
@@ -735,14 +875,13 @@ int main (int argc,char **argv)
 
     glutCreateWindow("Space Ataque");
 
-    glutTimerFunc(SA_Time, TimerFunction, 1);
+    glutTimerFunc(SA_Time, TimerFunction, 0);
 
     Inicializa();
 
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);   
     glutMainLoop();
-
 
     return 0;
 

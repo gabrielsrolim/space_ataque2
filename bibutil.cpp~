@@ -794,7 +794,6 @@ void DesenhaMesh(MESH* mesh, bool temMateriais, bool normaisPorVertice, GLint te
             // envia a normal correspondente
 			//cout << "aqui mesmo?\n";
             if (normaisPorVertice){
-                printf("Normaliza\n");
 				//cout << mesh->normais.size() << "\n";
 				//cout << mesh->normais[mesh->faces[i].norm[vf]].x << "," << mesh->normais[mesh->faces[i].norm[vf]].y << "," << mesh->normais[mesh->faces[i].norm[vf]].z << "\n";
                 glNormal3f(mesh->normais[mesh->faces[i].norm[vf]].x,
