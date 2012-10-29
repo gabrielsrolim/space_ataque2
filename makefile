@@ -1,4 +1,4 @@
-CXXFLAGS = -lglut -lGL -lGLU -ljpeg -lX11
+CXXFLAGS = -lglut -lGL -lGLU -ljpeg -lX11 -lm -lpthread
 LINKOBJ  = main.o bibutil.o importar.o
 BIN  = space_ataque
 OBJ  = main.o bibutil.o importar.o
@@ -19,3 +19,5 @@ importar.o: importar.c
 	
 clean: 
 	${RM} $(OBJ) $(BIN)	
+ 
+#-O2 -L/usr/X11R6/lib -lm -lpthread -lX11
