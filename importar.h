@@ -19,8 +19,10 @@
 #define VELOCIDADE_DELC_AVIAO 0.5
 #define VELOCIDADE_MISSEL 0.5
 #define VELOCIDADE_DESC_ESFERA 1.0
+#define QTD_MISSEL_OVNI 20
+#define VEZES 6.0
 
-#define PERDE_VIDA 0.3
+#define PERDE_VIDA 1.0
 
 /*Defines para os misseis*/
 #define M_ESFERA    1
@@ -30,6 +32,12 @@
 typedef struct p3d{
     double x, y, z;
 }Point3D;
+
+typedef struct{
+	Point3D ponto;
+	bool habilitado;
+	bool dispara_missel_esfera;
+}tObjetoJogos;
 
 //tipo esfera: util para saber se houve colisao, alterando status.
 typedef struct esfera{
