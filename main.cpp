@@ -412,6 +412,38 @@ void display(void){
 	glutSwapBuffers();
 }
 
+void teclasEspeciais(int key, int x, int y){
+	switch(key){
+	case GLUT_KEY_RIGHT:
+		if(vira_nave>=-10){
+			vira_nave=-14;            
+		}else{
+			if(rx>=20.0){
+				rx=20;
+			}else{
+				rx+=VELOCIDADE_DELC_AVIAO;
+			}
+			
+		}
+		//vira_nave=-20; 
+		glutPostRedisplay();
+		//vira_nave=0;
+		break;
+	case GLUT_KEY_LEFT:
+		if(vira_nave<=10){
+			vira_nave=14;            
+		}else{
+			if(rx<=-20.0){
+				rx=-20;
+			}else{
+				rx-=VELOCIDADE_DELC_AVIAO;            
+			} 
+		}            
+		glutPostRedisplay();
+		break;
+    }
+}
+
 void keyboard(unsigned char k,int x,int y){
 	switch(k){
 	case ' ':
@@ -857,7 +889,8 @@ int main (int argc,char **argv)
 	Inicializa();
 
 	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);   
+	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(teclasEspeciais); 	
 	glutMainLoop();
 
 	return 0;
