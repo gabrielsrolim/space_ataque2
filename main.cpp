@@ -235,7 +235,7 @@ void Desenha(){
    if(habilita_desenho){
    glPushMatrix();
     glTranslated(0, 0, -60);
-     //Esferas();
+     Esferas();
      //misseis();
      desenha_aviao();
      glPopMatrix();  
@@ -523,7 +523,7 @@ void Esferas(){
     //glRotated(teste,0,1,0);rodar ovne.
     glScaled(2,2,2);
     SetaModoDesenho('s');
-    //DesenhaObjeto(ovni);
+    DesenhaObjeto(ovni);
     
      glBegin(GL_LINES);
       
@@ -668,7 +668,7 @@ void Inicializa(){
    //printf("Inicializa 1\n");
    
    
-   aviao = CarregaObjeto("nave_pronta_gabriel.obj", true);
+   aviao = CarregaObjeto("nave_pronta_gabriel2.obj", true);
     if(aviao == NULL){
         printf("ERRO teste.obj\n");
     }else{
@@ -699,7 +699,7 @@ void Inicializa(){
    DestroiRegPoints(&points);
    
    
-    ovni = CarregaObjeto("ovni.obj", true);
+    ovni = CarregaObjeto("ovni2.obj", true);
     if(ovni == NULL){
         printf("ERRO ovni.obj\n");
     }else{
