@@ -34,7 +34,7 @@
 #include <string>
 #include <vector>
 
-#define DEBUG
+//#define DEBUG
 
 using namespace std;
 
@@ -241,7 +241,7 @@ void _leMateriais(string nomeArquivo, string caminho, bool mipmap) {
 
     string nomeCompleto = caminho+nomeArquivo;
 
-    //cout << "_leMateriais >>> " << nomeCompleto << endl;
+    cout << "_leMateriais >>> " << nomeCompleto << endl;
 
     fp.open(nomeCompleto.c_str(), ios::in);
 
@@ -352,6 +352,7 @@ void _leMateriais(string nomeArquivo, string caminho, bool mipmap) {
         if (aux.substr(0,7) == "map_Kd ") { // textura
             if (ptr==NULL) continue;
             texPtr = CarregaTextura(caminho+aux.substr(7), mipmap);
+            printf("textura id %d\n",texPtr->texid);
             ptr->texid = texPtr->texid;
         }
     }
