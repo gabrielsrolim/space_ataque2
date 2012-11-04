@@ -1,0 +1,15 @@
+# Blender v2.62 (sub 0) OBJ File: ''
+# www.blender.org
+mtllib background.mtl
+o Plane_Plane.001
+v 1.975699 -0.115315 -1.558926
+v 1.975699 -0.115315 2.827003
+v -2.410230 -0.115315 2.827003
+v -2.410229 -0.115315 -1.558926
+vt 0.000000 0.000000
+vt 0.794512 0.000000
+vt 0.794512 1.000000
+vt 0.000000 1.000000
+usemtl _MetalBare0154_1_thumbhuge.jpg.004
+s off
+f 1/1 4/2 3/3 2/4

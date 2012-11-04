@@ -1,4 +1,4 @@
-CXXFLAGS = -lglut -lGL -lGLU -ljpeg -lX11 -lm -lpthread
+CXXFLAGS = -lglut -lGL -lGLU -ljpeg -lm -lpthread -lGLEW
 LINKOBJ  = main.o bibutil.o importar.o
 BIN  = space_ataque
 OBJ  = main.o bibutil.o importar.o
@@ -7,7 +7,7 @@ RM = rm -f
 
 $(BIN): $(OBJ)
 	g++ $(LINKOBJ) -g -o space_ataque $(CXXFLAGS)
-	chmod 777 $(OBJ)
+	chmod 777 $(BIN)
 	
 gdb: $(OBJ)
 	g++ $(LINKOBJ) -g -o space_ataque $(CXXFLAGS)
