@@ -5,8 +5,8 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 
-OBJ  = main.o bibutil.o importar.o $(RES)
-LINKOBJ  = main.o bibutil.o importar.o $(RES)
+OBJ  = main.o bibutil.o importar.o glm.o glm_util.o glmimg.o glmimg_devil.o glmimg_jpg.o glmimg_png.o glmimg_sdl.o glmimg_sim.o $(RES)
+LINKOBJ  = main.o bibutil.o importar.o glm.o glm_util.o glmimg.o glmimg_devil.o glmimg_jpg.o glmimg_png.o glmimg_sdl.o glmimg_sim.o $(RES)
 LIBS =  -L"C:/Dev-Cpp/lib" -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32 -ljpeg  
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
@@ -34,3 +34,27 @@ bibutil.o: bibutil.cpp
 
 importar.o: importar.c
 	$(CPP) -c importar.c -o importar.o $(CXXFLAGS)
+
+glm.o: glm.c
+	$(CPP) -c glm.c -o glm.o $(CXXFLAGS)
+
+glm_util.o: glm_util.c
+	$(CPP) -c glm_util.c -o glm_util.o $(CXXFLAGS)
+
+glmimg.o: glmimg.c
+	$(CPP) -c glmimg.c -o glmimg.o $(CXXFLAGS)
+
+glmimg_devil.o: glmimg_devil.c
+	$(CPP) -c glmimg_devil.c -o glmimg_devil.o $(CXXFLAGS)
+
+glmimg_jpg.o: glmimg_jpg.c
+	$(CPP) -c glmimg_jpg.c -o glmimg_jpg.o $(CXXFLAGS)
+
+glmimg_png.o: glmimg_png.c
+	$(CPP) -c glmimg_png.c -o glmimg_png.o $(CXXFLAGS)
+
+glmimg_sdl.o: glmimg_sdl.c
+	$(CPP) -c glmimg_sdl.c -o glmimg_sdl.o $(CXXFLAGS)
+
+glmimg_sim.o: glmimg_sim.c
+	$(CPP) -c glmimg_sim.c -o glmimg_sim.o $(CXXFLAGS)

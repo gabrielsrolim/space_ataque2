@@ -17,10 +17,12 @@
 #define FIM_JOGO 65
 
 #define VELOCIDADE_DELC_AVIAO 0.5
-#define VELOCIDADE_MISSEL 0.5
+#define VELOCIDADE_MISSEL 1.0
+#define VELOCIDADE_MISSEL_OVNI 0.4
 #define VELOCIDADE_DESC_ESFERA 1.0
-#define QTD_MISSEL_OVNI 20
-#define VEZES 6.0
+#define QTD_MISSEL_OVNI 40
+#define QTD_MISSEL_NAVE 3
+#define VEZES 15.0
 
 #define PERDE_VIDA 1.0
 
@@ -35,6 +37,7 @@ typedef struct p3d{
 
 typedef struct{
 	Point3D ponto;
+	float rotacao;
 	bool habilitado;
 	bool dispara_missel_esfera;
 }tObjetoJogos;

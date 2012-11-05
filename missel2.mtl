@@ -1,0 +1,13 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+newmtl Material.001
+Ns 127.450980
+Ka 0.000000 0.000000 0.000000
+Kd 0.748538 0.564653 0.311100
+Ks 0.868246 0.885965 0.850526
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd MetalBare0156_1_thumbhuge2.jpg
+
+

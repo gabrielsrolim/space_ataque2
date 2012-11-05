@@ -297,6 +297,7 @@ void _leMateriais(string nomeArquivo, string caminho, bool mipmap) {
             // próximo
             string nomeMat = aux.substr(7);
             if (_procuraMaterial(nomeMat)!=-1) {
+				printf("\n\n\nMaterial encontrado\n");
                 ptr = NULL;
                 continue;
             }
@@ -715,11 +716,12 @@ void DesenhaMesh(MESH* mesh, bool temMateriais, bool normaisPorVertice, GLint te
     GLint ult_texid, texid;	// última/atual textura
     GLenum prim = GL_POLYGON;	// tipo de primitiva
     GLfloat branco[4] = { 1.0, 1.0, 1.0, 1.0 };	// constante para cor branca
-
+	
     if (mesh->dlist >= 1000)
         glNewList(mesh->dlist-1000,GL_COMPILE_AND_EXECUTE);
     // Ou chama a display list já associada...
     else if (mesh->dlist > -1) {
+		printf("Chamou mesh->dlist %d\n",mesh->dlist);
         glCallList(mesh->dlist);
         return;
     }
@@ -769,8 +771,10 @@ void DesenhaMesh(MESH* mesh, bool temMateriais, bool normaisPorVertice, GLint te
 
         // Se o objeto possui uma textura associada, utiliza
         // o seu texid ao invés da informação em cada face
-        if (textura != -1)
+        if (textura != -1){
+            printf("tem id_textura %d\n",textura);
             texid = textura;
+        }
         //else
             // Lê o texid associado à face (-1 se não houver)
         //    texid = _materiais[mesh->faces[i].mat]->texid;
