@@ -83,7 +83,12 @@ void Texto2(){
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textRodada[i]);
 	
 	if(vidas>0){
-       sprintf(textRodada,"Parabens! Voce Venceu",pontos);
+       sprintf(textRodada,"Parabens! Voce Salvou a Galaxia!!",pontos);
+		glRasterPos3d(-4, -6, 0);
+		for(i=0; textRodada[i] != '\0'; ++i)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textRodada[i]);
+   }else{
+	    sprintf(textRodada,"Naaaaooo!!! A Galaxia foi destruida!!",pontos);
 		glRasterPos3d(-4, -6, 0);
 		for(i=0; textRodada[i] != '\0'; ++i)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textRodada[i]);
@@ -367,7 +372,7 @@ void Desenha(){
 
 	barravida();
 	chances();
-	Texto();
+	//Texto();
 
 	glBegin(GL_QUAD_STRIP);
 	//glNormal3d(0.0, 0.0, 1.0);
@@ -634,6 +639,9 @@ void teclasEspeciais(int key, int x, int y){
 				rx=20;
 			}else{
 				rx+=VELOCIDADE_DELC_AVIAO;
+				if((int)rx%2==0){
+					ajeita_nave -=1;
+				}
 			}
 			
 		}
@@ -648,9 +656,13 @@ void teclasEspeciais(int key, int x, int y){
 			if(rx<=-20.0){
 				rx=-20;
 			}else{
-				rx-=VELOCIDADE_DELC_AVIAO;            
+				rx-=VELOCIDADE_DELC_AVIAO;
+				if((int)rx%2==0){
+					ajeita_nave+=1;
+				}
+				
 			} 
-		}            
+		}           
 		glutPostRedisplay();
 		break;
 	}
