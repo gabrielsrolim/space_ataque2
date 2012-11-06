@@ -21,10 +21,10 @@
 #define VELOCIDADE_MISSEL_OVNI 0.4
 #define VELOCIDADE_DESC_ESFERA 1.0
 #define QTD_MISSEL_OVNI 40
-#define QTD_MISSEL_NAVE 3
-#define VEZES 15.0
+#define QTD_MISSEL_NAVE 5
+#define VEZES 10.0
 
-#define PERDE_VIDA 1.0
+#define PERDE_VIDA 0.1
 
 /*Defines para os misseis*/
 #define M_ESFERA    1

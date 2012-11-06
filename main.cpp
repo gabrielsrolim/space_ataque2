@@ -12,9 +12,9 @@
 #include "bibutil.h"
 #include "importar.h"
 #include "glm.h"
+#include "sound.h"
+#include <SDL\SDL.h>
 #define HAVE_LIBJPEG
-
-//using namespace std;
 
 
 tPosicao missel_esfera,missel_nave,nave_espacial;
@@ -27,11 +27,17 @@ double rx = 0.0,ry=0.0,rz=0.0,trans_missel_nave=0.0,trans_ovni=0.0,trans_missel_
 double z=0.5,cor_esferas=0.0,mov_esferas=0.0,rodar_ovne=0.0;
 double trans_ini_nave=-15,escala_missel=2.4;//padrão escala 0.2m translação inicial: -19(eixo y)
 double tamanho_vida = 5.0,velovidade_missel_ovni = VELOCIDADE_MISSEL_OVNI;
-double velocidade_ovni = 0.1,pos_lanca_missel_ovni = 0;
+double velocidade_ovni = 0.3,pos_lanca_missel_ovni = 0;
 bool habilitar_linhas = false;
 float ajeita_nave = 0;
-GLMmodel *GLM_ovni = NULL,*GLM_aviao = NULL,*GLM_background = NULL,*GLM_missel = NULL,*GLM_missel2 = NULL;
-GLuint GLM_ovni_list = 0,GLM_aviao_list = 0,GLM_background_list=0,GLM_missel_list=0,GLM_missel_list2=0;
+GLMmodel *GLM_ovni = NULL,*GLM_aviao = NULL,*GLM_aviao2 = NULL,*GLM_background = NULL,*GLM_missel = NULL,*GLM_missel2 = NULL;
+GLuint GLM_ovni_list = 0,GLM_aviao_list = 0,GLM_aviao_list2,GLM_background_list=0,GLM_missel_list=0,GLM_missel_list2=0;
+int qtd_colisoes = 0;
+ /* Audio format specifications. */
+SDL_AudioSpec desired, obtained;
+
+    /* Our loaded sounds and their formats. */
+sound_t cannon, musica;
 
 OBJ *ovni = NULL,*aviao = NULL,*background = NULL;
 tObjetoJogos OB_ovni,OB_nave,OB_missel1[QTD_MISSEL_NAVE],OB_missel2[QTD_MISSEL_OVNI];
@@ -53,7 +59,7 @@ void Texto(){
 	int i;
 	glColor3f(0,0,0);     
 	// Posição onde o textpontos será colocado
-	sprintf(textpontos,"Pontos: %d",pontos);
+	//sprintf(textpontos,"Pontos: %d",pontos);
 	glRasterPos3d(10, 0, 0);
 	for(i=0; textpontos[i] != '\0'; ++i)
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textpontos[i]);
@@ -75,12 +81,21 @@ void Texto2(){
 	glRasterPos3d(-4, -4, 0);
 	for(i=0; textRodada[i] != '\0'; ++i)
 	glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textRodada[i]);
-	if(pontos >20){ 
-		sprintf(textRodada,"Parabens! Voce Fez %d pontos.",pontos);
+	
+	if(vidas>0){
+       sprintf(textRodada,"Parabens! Voce Venceu",pontos);
 		glRasterPos3d(-4, -6, 0);
 		for(i=0; textRodada[i] != '\0'; ++i)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textRodada[i]);
+   }
+	
+	
+	/*if(pontos >20){ 
+		sprintf(textRodada,"Parabens! Voce Fez %d pontos.",pontos);
+		glRasterPos3d(-4, -8, 0);
+		for(i=0; textRodada[i] != '\0'; ++i)
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,textRodada[i]);    
-	}
+	}*/
 	
 }
 
@@ -89,8 +104,9 @@ void RecomecaJogo(){
 	tamanho_vida = 5;pontos=0;
 	vidas=3;
 	velovidade_missel_ovni = VELOCIDADE_MISSEL_OVNI;
-	velocidade_ovni = 0.1;
+	velocidade_ovni = 0.3;
 	velocidade_disparo = VEZES;
+	qtd_colisoes = 0;
 	for(i=0;i<QTD_ESFERAS;i++){
 		esfera[i].status = DISPONIVEL;
 	}
@@ -108,9 +124,9 @@ void ResetaJogo(int fim){
 	if(fim){
 		habilita_desenho=0;
 		Desenha();
-		vidas=3;
+
 		velovidade_missel_ovni = VELOCIDADE_MISSEL_OVNI;
-		velocidade_ovni = 0.1;
+		velocidade_ovni = 0.3;
 		velocidade_disparo = VEZES;
 		ajeita_nave = 0;
 		
@@ -137,6 +153,7 @@ void ResetaJogo(int fim){
 			OB_missel2[i].habilitado = false;
 			OB_missel2[i].dispara_missel_esfera = false;
 		}
+		qtd_colisoes = 0;
 	}
 	
 	
@@ -315,7 +332,7 @@ void Desenha(){
 		}		
 		glPushMatrix();
 		glTranslated(0,0,-30);
-		glScaled(20,20,20) ;
+		glScaled(20,20,20);
 		glRotated(90,1,0,0);
 		glCallList(GLM_background_list);
 		glPopMatrix();
@@ -349,7 +366,7 @@ void Desenha(){
 	glDisable(GL_LIGHTING);
 
 	barravida();
-	//chances();
+	chances();
 	Texto();
 
 	glBegin(GL_QUAD_STRIP);
@@ -532,6 +549,7 @@ void chances(){
 		glRotated(90,0,1,0);
 		//SetaModoDesenho('s');
 		//DesenhaObjeto(aviao);
+		glCallList(GLM_aviao_list2);
 		glPopMatrix();
 	} 
 	if(vidas>1){
@@ -544,6 +562,7 @@ void chances(){
 		glRotated(90,0,1,0);
 		//SetaModoDesenho('s');
 		//DesenhaObjeto(aviao);
+		glCallList(GLM_aviao_list2);
 		glPopMatrix();
 	}
 	if(vidas==3){
@@ -556,6 +575,7 @@ void chances(){
 		glRotated(90,0,1,0);
 		//SetaModoDesenho('s');
 		//DesenhaObjeto(aviao);
+		glCallList(GLM_aviao_list2);
 		glPopMatrix();
 	}
 }
@@ -590,12 +610,18 @@ void barravida(){
 	
 
 }
+bool primeira = true;
 
 void display(void){
 
 	Desenha();
+	
 
 	glutSwapBuffers();
+	if(primeira){
+     SDL_Delay(3000);
+     primeira = false;
+   }
 }
 
 void teclasEspeciais(int key, int x, int y){
@@ -641,9 +667,12 @@ void keyboard(unsigned char k,int x,int y){
 				OB_missel1[i].ponto.z = 0;
 				OB_missel1[i].habilitado = true;
 				OB_missel1[i].dispara_missel_esfera = true;
+				PlaySound(&cannon);
 				break;   
 			}
 		}
+		
+		//SDL_Delay(2000);
 		glutPostRedisplay();
 		
 		break;
@@ -706,7 +735,8 @@ void keyboard(unsigned char k,int x,int y){
 			sprintf(textpontos,"%s","Pontos: 0");
 			habilita_desenho = 1;
 			tamanho_vida = 5;
-			pontos = 0;  
+			pontos = 0;
+ 		   vidas=3;  
 		}
 		
 		glutPostRedisplay();
@@ -802,6 +832,12 @@ void Inicializa(){
 	glmDraw(GLM_aviao, GLM_SMOOTH|GLM_TEXTURE|GLM_COLOR);
 	glEndList();
 	
+	GLM_aviao2 = glmReadOBJ("nave_pronta_gabriel2.obj");
+	GLM_aviao_list2 = glGenLists(1);
+	glNewList(GLM_aviao_list2, GL_COMPILE);
+	glmDraw(GLM_aviao2, GLM_SMOOTH);
+	glEndList();
+	
 	
 	GLM_missel = glmReadOBJ("missel.obj");
 	GLM_missel_list = glGenLists(1);
@@ -865,6 +901,10 @@ void ColisaoMisselNavelOvni(){
 				sprintf(textpontos,"Pontos: %d",pontos);
 				OB_missel1[i].habilitado = false;
 				OB_missel1[i].dispara_missel_esfera = false;
+				tamanho_vida-= PERDE_VIDA;
+				if(tamanho_vida<-5){
+                 ResetaJogo(1);
+                }
 			}
 
 
@@ -893,7 +933,7 @@ void ColisaoMisselOvniNave(){
 				
 				vez=0.0;
 				trans_missel_esfera = 0;
-				tamanho_vida-= PERDE_VIDA;
+				
 				trans_missel_nave=0;
 				dispara = 0;
 				OB_missel2[i].dispara_missel_esfera = false;
@@ -904,6 +944,14 @@ void ColisaoMisselOvniNave(){
 				if(tamanho_vida<=-5.0){
 					ResetaJogo(1); 
 				}
+				qtd_colisoes += 1;
+				if(qtd_colisoes == 5){
+                   qtd_colisoes = 0;
+                   vidas -= 1;
+                   if(vidas <=0){
+                    ResetaJogo(1);
+                   }
+                }   
 			}
 			if(OB_missel2[i].ponto.y <=OB_nave.ponto.y-5){
 				vez=0.0;
@@ -993,15 +1041,15 @@ void TimerFunction(int value){
 		for(i=0;i<QTD_MISSEL_OVNI;i++){
 			if(OB_missel2[i].dispara_missel_esfera && OB_missel2[i].habilitado){
 				
-				if(tamanho_vida <= -1){
+				if(tamanho_vida <= 0){
 					//printf("Aumenta vel\n");
 					//velovidade_missel_ovni = 1.0;
 					if(velocidade_ovni < 0){
-						velocidade_ovni = -0.4;
+						velocidade_ovni = -(VELOCIDADE_MISSEL_OVNI + 0.3);
 					}else{
-						velocidade_ovni = 0.4;
+						velocidade_ovni = (VELOCIDADE_MISSEL_OVNI + 0.3);
 					}      
-					velocidade_disparo = 8;
+					velocidade_disparo = 5;
 				}
 				//trans_missel_esfera+=velovidade_missel_ovni;
 				OB_missel2[i].ponto.y -= velovidade_missel_ovni;
@@ -1014,9 +1062,16 @@ void TimerFunction(int value){
 			velocidade_ovni *= (-1);
 		}
 		trans_ovni += velocidade_ovni;
-		ColisaoMisselNavelOvni();
-		ColisaoMisselOvniNave();
-		ColisaoMisselOvniMisselNave();
+		if(habilita_desenho){
+    		ColisaoMisselNavelOvni();
+    		ColisaoMisselOvniNave();
+    		ColisaoMisselOvniMisselNave();
+        }
+		
+		if(getStatusSound(musica)!= 1){
+          printf("TOCA NOVAMENTE\n");
+          PlaySound(&musica);
+        }
 		
 		//ColisoesMisselNave();
 		// ColisoesMisselEsfera();
@@ -1063,15 +1118,70 @@ void TimerFunction(int value){
 
 }
 
+void InicializaSound(){
+
+    /* Initialize SDL's video and audio subsystems.
+       Video is necessary to receive events. */
+    if (SDL_Init(SDL_INIT_AUDIO) != 0) {
+	printf("Unable to initialize SDL: %s\n", SDL_GetError());
+	return;
+    }
+
+    /* Make sure SDL_Quit gets called when the program exits. */
+    atexit(SDL_Quit);
+
+    /* We also need to call this before we exit. SDL_Quit does
+       not properly close the audio device for us. */
+    atexit(SDL_CloseAudio);
+
+    /* Attempt to set a 256x256 hicolor (16-bit) video mode. */
+    /*screen = SDL_SetVideoMode(256, 256, 16, 0);
+    if (screen == NULL) {
+	printf("Unable to set video mode: %s\n", SDL_GetError());
+	return 1;
+    }*/
+
+    /* Open the audio device. The sound driver will try to give us
+       the requested format, but it might not succeed. The 'obtained'
+       structure will be filled in with the actual format data. */
+    desired.freq = 44100;	/* desired output sample rate */
+    desired.format = AUDIO_S16;	/* request signed 16-bit samples */
+    desired.samples = 4096;	/* this is more or less discretionary */
+    desired.channels = 2;	/* ask for stereo */
+    desired.callback = AudioCallback;
+    desired.userdata = NULL;	/* we don't need this */
+    if (SDL_OpenAudio(&desired, &obtained) < 0) {
+	printf("Unable to open audio device: %s\n", SDL_GetError());
+	return;
+    }
+
+    /* Load our sound files and convert them to the sound card's format. */
+    if (LoadAndConvertSound("teste.wav", &obtained, &cannon) != 0) {
+	printf("Unable to load sound.\n");
+	return;
+    }
+
+    if (LoadAndConvertSound("sw.wav", &obtained, &musica) != 0) {
+	printf("Unable to load sound.\n");
+	return;
+    }
+
+    /* Clear the list of playing sounds. */
+    ClearPlayingSounds();
+
+    /* SDL's audio is initially paused. Start it. */
+    SDL_PauseAudio(0);
+    
+    PlaySound(&musica);
+}
+
 
 
 int main (int argc,char **argv)
 {
 
-
 	glutInit(&argc,argv);
 
-	//glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
 	glutInitWindowPosition(50,50);
@@ -1083,11 +1193,15 @@ int main (int argc,char **argv)
 	glutTimerFunc(SA_Time, TimerFunction, 0);
 
 	Inicializa();
+	InicializaSound();
+	printf("Carregando Musica\n");
+	//SDL_Delay(3000);
 
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(teclasEspeciais); 	
 	glutMainLoop();
+    
 
 	return 0;
 

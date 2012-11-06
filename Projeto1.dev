@@ -1,7 +1,7 @@
 [Project]
 FileName=Projeto1.dev
 Name=Projeto1
-UnitCount=15
+UnitCount=17
 Type=1
 Ver=1
 ObjFiles=
@@ -12,7 +12,7 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=
 CppCompiler=
-Linker=-lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32 -ljpeg_@@_
+Linker=-lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32 -ljpeg -lSDLmain -lSDL_@@_
 IsCpp=1
 Icon=
 ExeOutput=
@@ -189,6 +189,26 @@ BuildCmd=$(CPP) -c glmimg_sim.c -o glmimg_sim.o $(CXXFLAGS)
 
 [Unit15]
 FileName=glmint.h
+CompileCpp=1
+Folder=Projeto1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=sound.c
+CompileCpp=1
+Folder=Projeto1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=sound.h
 CompileCpp=1
 Folder=Projeto1
 Compile=1

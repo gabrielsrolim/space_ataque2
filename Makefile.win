@@ -5,11 +5,11 @@ CPP  = g++.exe
 CC   = gcc.exe
 WINDRES = windres.exe
 RES  = 
-OBJ  = main.o bibutil.o importar.o glm.o glm_util.o glmimg.o glmimg_devil.o glmimg_jpg.o glmimg_png.o glmimg_sdl.o glmimg_sim.o $(RES)
-LINKOBJ  = main.o bibutil.o importar.o glm.o glm_util.o glmimg.o glmimg_devil.o glmimg_jpg.o glmimg_png.o glmimg_sdl.o glmimg_sim.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32 -ljpeg  
-INCS =  -I"C:/Dev-Cpp/include" 
-CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+OBJ  = main.o bibutil.o importar.o glm.o glm_util.o glmimg.o glmimg_devil.o glmimg_jpg.o glmimg_png.o glmimg_sdl.o glmimg_sim.o sound.o $(RES)
+LINKOBJ  = main.o bibutil.o importar.o glm.o glm_util.o glmimg.o glmimg_devil.o glmimg_jpg.o glmimg_png.o glmimg_sdl.o glmimg_sim.o sound.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/SDL-1.2.15/lib" -lmingw32 -lSDLmain -lSDL -lglut32 -lglu32 -lopengl32 -lwinmm -lgdi32 -ljpeg -lSDLmain -lSDL  
+INCS =  -I"C:/Dev-Cpp/include"  -I"C:/SDL-1.2.15/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include"  -I"C:/SDL-1.2.15/include" 
 BIN  = Projeto1.exe
 CXXFLAGS = $(CXXINCS)  
 CFLAGS = $(INCS)  
@@ -58,3 +58,6 @@ glmimg_sdl.o: glmimg_sdl.c
 
 glmimg_sim.o: glmimg_sim.c
 	$(CPP) -c glmimg_sim.c -o glmimg_sim.o $(CXXFLAGS)
+
+sound.o: sound.c
+	$(CPP) -c sound.c -o sound.o $(CXXFLAGS)
