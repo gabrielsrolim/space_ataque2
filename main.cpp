@@ -1146,13 +1146,6 @@ void InicializaSound(){
        not properly close the audio device for us. */
     atexit(SDL_CloseAudio);
 
-    /* Attempt to set a 256x256 hicolor (16-bit) video mode. */
-    /*screen = SDL_SetVideoMode(256, 256, 16, 0);
-    if (screen == NULL) {
-	printf("Unable to set video mode: %s\n", SDL_GetError());
-	return 1;
-    }*/
-
     /* Open the audio device. The sound driver will try to give us
        the requested format, but it might not succeed. The 'obtained'
        structure will be filled in with the actual format data. */
